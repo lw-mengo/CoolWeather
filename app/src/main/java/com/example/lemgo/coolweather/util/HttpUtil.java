@@ -1,5 +1,7 @@
 package com.example.lemgo.coolweather.util;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -18,6 +20,7 @@ public class HttpUtil {
                 HttpURLConnection connection = null;
                 try{
                     URL url =new URL(address);
+                    Log.d("msg7",url.toString());
                     connection  = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("GET");
                     connection.setConnectTimeout(8000);
@@ -28,6 +31,7 @@ public class HttpUtil {
                     String line;
                     while ((line = reader.readLine())!=null){
                         response.append(line);
+                        Log.d("msg8",response.toString());
                     }
                     if(listener != null){
                          listener.onFinish(response.toString());
