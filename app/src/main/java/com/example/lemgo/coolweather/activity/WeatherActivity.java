@@ -1,6 +1,7 @@
 package com.example.lemgo.coolweather.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -21,7 +22,7 @@ import com.example.lemgo.coolweather.util.Utility;
  * Created by Administrator on 2016/12/3 0003.
  */
 
-public class WeatherActivity extends Activity {
+public class WeatherActivity extends Activity implements View.OnClickListener {
     private LinearLayout weatherInfoLayout;
     private TextView cityNameText;
     private TextView publishText;
@@ -43,6 +44,12 @@ public class WeatherActivity extends Activity {
         temp1Text = (TextView) findViewById(R.id.temp1);
         temp2Text = (TextView) findViewById(R.id.temp2);
         currentDateText = (TextView) findViewById(R.id.current_date);
+        switchCity = (Button) findViewById(R.id.switch_city);
+        refreshWeather = (Button) findViewById(R.id.refresh);
+
+        switchCity.setOnClickListener(this);
+        refreshWeather.setOnClickListener(this);
+
 
 
         String countyCode = getIntent().getStringExtra("county_code");
@@ -56,14 +63,15 @@ public class WeatherActivity extends Activity {
         }
     }
 
+
     private void queryWeatherCode(String countyCode) {
         String address =  "http://www.weather.com.cn/data/list3/city"+countyCode+".xml";
-        Log.d("msg1",address);
+
         queryFromServer(address,"countyCode");
     }
     private void queryWeatherInfo(String weatherCode) {
         String  address = "http://www.weather.com.cn/data/cityinfo/"+weatherCode+".html";
-        Log.d("msg2",address);
+
         queryFromServer(address,"weatherCode");
     }
     private void queryFromServer(final String address, final String type) {
@@ -75,7 +83,6 @@ public class WeatherActivity extends Activity {
                         String[] array =response.split("\\|");
                         if(array!=null&&array.length==2){
                             String weatherCode = array[1];
-                            Log.d("msg3",weatherCode);
                             queryWeatherInfo(weatherCode);
                         }
                     }
@@ -113,5 +120,27 @@ public class WeatherActivity extends Activity {
     }
 
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case  R.id.switch_city:
+                Intent intent = new Intent(this,ChooseAreaActivity.class);
+                intent.putExtra("from_weather_activity",true);
+                startActivity(intent);
+                finish();
+                break;
+            case R.id.refresh:
+                publishText.setText("tongbu zhong....");
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+                String weatherCode = preferences.getString("weather_code","");
+                if(!TextUtils.isEmpty(weatherCode)){
+                    queryWeatherInfo(weatherCode);
+                }
+                break;
+            default:
+                break;
+        }
 
+
+    }
 }

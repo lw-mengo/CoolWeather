@@ -95,9 +95,6 @@ public class Utility {
             String weatherDesp = weatherInfo.getString("weather");
             String publishTime = weatherInfo.getString("ptime");
             saveWeatherInfo(context,cityName,weatherCode,temp1,temp2,weatherDesp,publishTime);
-            Log.d("msg4",cityName);
-            Log.d("msg5",temp1);
-            Log.d("msg6",weatherDesp);
 
         }catch (JSONException e){
             e.printStackTrace();
